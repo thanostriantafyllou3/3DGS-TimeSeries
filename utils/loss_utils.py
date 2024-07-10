@@ -14,7 +14,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from math import exp
 
-def signal_loss(network_output, gt, iter_count):
+def signal_loss(network_output, gt, iter_count=-1):
     # Region of interest is horizontal positioned at the center of the image
     window_size = gt.shape[0]
     row_idx = network_output.shape[1] // 2

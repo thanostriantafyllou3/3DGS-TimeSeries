@@ -71,13 +71,8 @@ class Scene:
 
         # Get the signal windows
         print("Loading Signal Windows")
-        gt_signal_path = args.source_path + '/gt_signal.csv'
+        gt_signal_path = self.model_path + '/gt_signal.csv'
         signal_windows = pd.read_csv(gt_signal_path, index_col='period')
-        
-        # Save the signal to 'output/<experiement>' for logging
-        signal_model_path = os.path.join(self.model_path, "gt_signal.csv")
-        print("Saving signal to model's directory at:", signal_model_path)
-        signal_windows.to_csv(signal_model_path)
 
         for resolution_scale in resolution_scales:
             print("Loading Training Cameras")

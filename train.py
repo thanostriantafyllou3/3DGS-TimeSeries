@@ -31,6 +31,7 @@ except ImportError:
 def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoint_iterations, checkpoint, debug_from):
     first_iter = 0
     tb_writer = prepare_output_and_logger(dataset)
+    save_signal_to_output(dataset)
     gaussians = GaussianModel(dataset.sh_degree)
     scene = Scene(dataset, gaussians)
     gaussians.training_setup(opt)
@@ -156,6 +157,13 @@ def prepare_output_and_logger(args):
     else:
         print("Tensorboard not available: not logging progress")
     return tb_writer
+
+def save_signal_to_output(args):
+    # Save the signal to 'output/<experiement>' for logging
+        signal_source_path = os.path.join(args.source_path, "gt_signal.csv")
+        signal_model_path = os.path.join(args.model_path, "gt_signal.csv")
+        print(f"Saving signal ({signal_source_path}) to model's directory at: {signal_model_path}")
+        os.system(f"cp {signal_source_path} {signal_model_path}")
 
 def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_iterations, scene : Scene, renderFunc, renderArgs):
     if tb_writer:
