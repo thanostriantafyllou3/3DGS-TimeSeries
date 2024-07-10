@@ -1,6 +1,22 @@
 # GS4Time
 
+## Environment Setup
+**Option 1:** use ```environment.yml``` in this repo:
+```
+cd ~/GS4Time
+conda env create -f environment.yml
+```
+
+**Option 2:** clone the gaussian_splatting environment (https://github.com/graphdeco-inria/gaussian-splatting) if already installed, and manually installed the missing libraries:
+```
+conda create -n GS4Time --clone gaussian_splatting
+```
+
 ## Instructions
+0. Activate conda environment:
+```
+conda activate GS4Time
+```
 1. Create dataset using ```train_test_split.py```. You can view the generated signal by running ```csv_explorer.ipynb```
 ```
   dst_dir
