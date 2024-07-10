@@ -96,20 +96,20 @@ def generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, f
 
 
 if __name__ == '__main__':
-    # SPECIFY THE TRAIN/TEST IMAGES
+    # CONFIGURATIONS
     start_period = 30
     end_period = 50
     sampling_ratio = 0.5
-    train_imgs = [i for i in range(30, 50, int(1/sampling_ratio))]
-    test_imgs = [i for i in range(30, 50)]
-    print(test_imgs)
-
-    # SPECIFY THE SOURCE AND DESTINATION DIRECTORIES FOR THE TRAIN/TEST IMAGES
+    window_size = 15
     src_dir = '/home/thanostriantafyllou/GS4Time/data/nerf_synthetic/chair/'
     dst_dir = '/home/thanostriantafyllou/GS4Time/data/time_series/chair/'
+
+    # Generate the list of train/test images
+    train_imgs = [i for i in range(start_period, end_period, int(1/sampling_ratio))]
+    test_imgs = [i for i in range(start_period, end_period)]
 
 
     copy_images(train_imgs, test_imgs, src_dir, dst_dir)
     create_filtered_json(train_imgs, test_imgs, src_dir, dst_dir)
-    generate_sine_wave_samples(30, 50, 15, dst_dir, freq=1)
+    generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, freq=1)
 
