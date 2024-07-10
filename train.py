@@ -91,7 +91,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         gt_signal = viewpoint_cam.original_signal.cuda()
         #Ll1 = l1_loss(image, gt_signal)
         # loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
-        Ll1 = signal_loss(image, gt_signal) # loss is just L1 in GS4Time
+        Ll1 = signal_loss(image, gt_signal, iteration) # loss is just L1 in GS4Time
         loss = Ll1
         loss.backward()
 

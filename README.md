@@ -24,10 +24,24 @@ conda activate GS4Time
     ├── train
     └── test
 ```
-3. Train GS4Time model using train/test split:
+2. Train GS4Time model using train/test split:
 ```shell
 python train.py -s <path to created dataset> --eval
 ```
+e.g. train with 30k iterations and save the model at 7k and 30k iterations:
+```shell
+python train.py \
+    -s ~/GS4Time/data/time_series/chair \  # Specify dataset source directory
+    --eval \  # Apply train-test split
+    --iterations 100000 \  # Number of training iterations
+    --save_iterations 7000 30000 100000  # Save the model at these iterations
+```
+Alternative: run executable shell script
+```shell
+chmod +x train.sh
+./train.sh
+```
+
 3. Render images:
 ```shell
 python render.py -m <path to trained model>

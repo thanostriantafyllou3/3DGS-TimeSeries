@@ -89,59 +89,72 @@ def generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, f
 
     df = pd.DataFrame(data, index=index)
     df.index.name = 'period'
-    csv_path = os.path.join(dst_dir, 'sine_wave_samples.csv')
+    csv_path = os.path.join(dst_dir, 'signal.csv')
     df.to_csv(csv_path)
     print(f'Sine wave samples saved to {csv_path}')
 
-def generate_gaussian_noise_samples(start_period, end_period, window_size, dst_dir, mean=0, std=0.5):
+
+def generate_gaussian_noise_samples(start_period, end_period, window_size, dst_dir, mean=0, std=1, use_seed=False, seed=0):
     num_windows = end_period - start_period
     total_samples = num_windows * window_size
 
-    x = np.random.normal(mean, std, total_samples)
+    if use_seed:
+        np.random.seed(seed)
+
+    y = np.random.normal(mean, std, total_samples)
 
     # Normalise the signal to [0, 1]
-    x_norm = (x - x.min()) / (x.max() - x.min())
+    y_norm = (y - y.min()) / (y.max() - y.min())
 
     data = {
-        f'sample_{i}': x_norm[i::window_size] for i in range(window_size)
+        f'sample_{i}': y_norm[i::window_size] for i in range(window_size)
     }
     index = np.arange(start_period, end_period)
 
     df = pd.DataFrame(data, index=index)
     df.index.name = 'period'
-    csv_path = os.path.join(dst_dir, 'gaussian_noise_samples.csv')
+    csv_path = os.path.join(dst_dir, 'signal.csv')
     df.to_csv(csv_path)
     print(f'Gaussian noise samples saved to {csv_path}')
 
 
 if __name__ == '__main__':
-    # CONFIGURATIONS
+    ### CONFIGURATIONS
+    ## SIGNAL
+    signal_type = 'sine_wave'
+    # sine_wave
+    freq = 1
+    # gaussian_noise
+    use_seed = True
     seed = 0
-    gaussian_noise = True
     mean = 0
-    std = 0.5
+    std = 1
 
+    ## SAMPLING
     start_period = 30
     end_period = 50
     sampling_ratio = 0.5
     window_size = 15
 
-
-    src_dir = '/home/anthosmakris/GS_exp/GS4Time/data/nerf_synthetic/chair_src' 
-    dst_dir = '/home/anthosmakris/GS_exp/GS4Time/data/time_series/chair'
-    # src_dir = '/home/thanostriantafyllou/GS4Time/data/nerf_synthetic/chair/'
-    # dst_dir = '/home/thanostriantafyllou/GS4Time/data/time_series/chair/'
+    ## FILE PATH
+    # src_dir = '/home/anthosmakris/GS_exp/GS4Time/data/nerf_synthetic/chair_src' 
+    # dst_dir = '/home/anthosmakris/GS_exp/GS4Time/data/time_series/chair'
+    src_dir = '/home/thanostriantafyllou/GS4Time/data/nerf_synthetic/chair/'
+    dst_dir = '/home/thanostriantafyllou/GS4Time/data/time_series/chair/'
+    
+    ###############################################################################
 
     # Generate the list of train/test images
     train_imgs = [i for i in range(start_period, end_period, int(1/sampling_ratio))]
     test_imgs = [i for i in range(start_period, end_period)]
 
-    np.random.seed(seed)
 
     copy_images(train_imgs, test_imgs, src_dir, dst_dir)
     create_filtered_json(train_imgs, test_imgs, src_dir, dst_dir)
-    if gaussian_noise:
-        generate_gaussian_noise_samples(start_period, end_period, window_size, dst_dir, mean=mean, std=std)
+    if signal_type == 'gaussian_noise':
+        generate_gaussian_noise_samples(start_period, end_period, window_size, dst_dir, mean=mean, std=std, use_seed=use_seed, seed=seed)
+    elif signal_type == 'sine_wave':
+        generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, freq=freq)
     else:
-        generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, freq=1)
+        raise NotImplementedError(f'{signal_type} is not implemented')
 

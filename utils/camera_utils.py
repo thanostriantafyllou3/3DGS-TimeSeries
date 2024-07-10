@@ -13,7 +13,6 @@ from scene.cameras import Camera
 import numpy as np
 from utils.general_utils import PILtoTorch
 from utils.graphics_utils import fov2focal
-import pandas as pd
 import torch
 
 WARNED = False
@@ -56,9 +55,8 @@ def loadCam(args, id, cam_info, resolution_scale, signal_windows):
                   image=gt_image, gt_alpha_mask=loaded_mask,
                   image_name=cam_info.image_name, uid=id, original_signal=original_signal, data_device=args.data_device)
 
-def cameraList_from_camInfos(cam_infos, resolution_scale, args):
+def cameraList_from_camInfos(cam_infos, resolution_scale, args, signal_windows):
     camera_list = []
-    signal_windows = pd.read_csv('/home/thanostriantafyllou/GS4Time/data/time_series/chair/sine_wave_samples.csv', index_col='period')
     # each CameraInfo in cam_infos has an 'image_name' attribute (e.g. 'r_0.png')
     for id, c in enumerate(cam_infos):
         camera_list.append(loadCam(args, id, c, resolution_scale, signal_windows))

@@ -14,8 +14,22 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 from math import exp
 
-def signal_loss(network_output, gt):
-    y_hat = network_output[:, 400, 400:415]
+def signal_loss(network_output, gt, iter_count):
+    # Region of interest is horizontal positioned at the center of the image
+    window_size = gt.shape[0]
+    row_idx = network_output.shape[1] // 2
+    col_idx_mid = network_output.shape[2] // 2
+    col_idx_start = col_idx_mid - window_size // 2
+    col_idx_end = col_idx_mid + window_size // 2
+    if window_size % 2 != 0:
+        col_idx_end += 1
+
+    if iter_count == 1: # if first time computing the loss
+        print(f"The coordinates of the horizontal region of interest are: [{row_idx}, {col_idx_start}:{col_idx_end}]")
+    
+    # Get the image-region of interest
+    y_hat = network_output[:, row_idx, col_idx_start:col_idx_end]
+
     # RGB to grayscale -> NTSC formula: 0.299 ∙ Red + 0.587 ∙ Green + 0.114 ∙ Blue
     y_hat = 0.299 * y_hat[0] + 0.587 * y_hat[1] + 0.114 * y_hat[2]
     return torch.abs((y_hat - gt)).mean()

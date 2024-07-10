@@ -17,6 +17,7 @@ from scene.dataset_readers import sceneLoadTypeCallbacks
 from scene.gaussian_model import GaussianModel
 from arguments import ModelParams
 from utils.camera_utils import cameraList_from_camInfos, camera_to_JSON
+import pandas as pd
 
 class Scene:
 
@@ -68,11 +69,21 @@ class Scene:
 
         self.cameras_extent = scene_info.nerf_normalization["radius"]
 
+        # Get the signal windows
+        print("Loading Signal Windows")
+        gt_signal_path = args.source_path + '/gt_signal.csv'
+        signal_windows = pd.read_csv(gt_signal_path, index_col='period')
+        
+        # Save the signal to 'output/<experiement>' for logging
+        signal_model_path = os.path.join(self.model_path, "gt_signal.csv")
+        print("Saving signal to model's directory at:", signal_model_path)
+        signal_windows.to_csv(signal_model_path)
+
         for resolution_scale in resolution_scales:
             print("Loading Training Cameras")
-            self.train_cameras[resolution_scale] = cameraList_from_camInfos(scene_info.train_cameras, resolution_scale, args)
+            self.train_cameras[resolution_scale] = cameraList_from_camInfos(scene_info.train_cameras, resolution_scale, args, signal_windows)
             print("Loading Test Cameras")
-            self.test_cameras[resolution_scale] = cameraList_from_camInfos(scene_info.test_cameras, resolution_scale, args)
+            self.test_cameras[resolution_scale] = cameraList_from_camInfos(scene_info.test_cameras, resolution_scale, args, signal_windows)
 
         if self.loaded_iter:
             self.gaussians.load_ply(os.path.join(self.model_path,
