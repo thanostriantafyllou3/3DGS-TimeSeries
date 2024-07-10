@@ -1,3 +1,35 @@
+# GS4Time
+
+## Instructions
+1. Create dataset using ```train_test_split.py```. You can view the generated signal by running ```csv_explorer.ipynb```
+```
+  dst_dir
+    ├── sine_wave_samples.csv
+    ├── train
+    └── test
+```
+3. Train GS4Time model using train/test split:
+```shell
+python train.py -s <path to created dataset> --eval
+```
+3. Render images:
+```shell
+python render.py -m <path to trained model>
+```
+4. Rename experiment folder in ```output/``` (e.g. '_sine_norm_freq1_iter30k_ratio0.5_winsize15_')
+5. Duplicate ```output_analyser.ipynb``` into the experiment folder and run it to visualise the results
+
+## Experiments
+* Sine wave; 50k, 100k, (maybe 200k) iterations
+* Gaussian noise only signal
+* Sine wave with higher frequency and window sizes; 50, 100 (i.e., more cycles per region than just 1)
+* For the sine wave signal that has the best performance add Gaussian noise
+
+Note: keep default; ```sampling_ratio=0.5```, ```start_period=30```, ```end_period=50``` (for now)
+
+
+
+------------
 # 3D Gaussian Splatting for Real-Time Radiance Field Rendering
 Bernhard Kerbl*, Georgios Kopanas*, Thomas Leimkühler, George Drettakis (* indicates equal contribution)<br>
 | [Webpage](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) | [Full Paper](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/3d_gaussian_splatting_high.pdf) | [Video](https://youtu.be/T_kXY43VZnk) | [Other GRAPHDECO Publications](http://www-sop.inria.fr/reves/publis/gdindex.php) | [FUNGRAPH project page](https://fungraph.inria.fr) |<br>
