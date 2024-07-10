@@ -93,23 +93,55 @@ def generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, f
     df.to_csv(csv_path)
     print(f'Sine wave samples saved to {csv_path}')
 
+def generate_gaussian_noise_samples(start_period, end_period, window_size, dst_dir, mean=0, std=0.5):
+    num_windows = end_period - start_period
+    total_samples = num_windows * window_size
+
+    x = np.random.normal(mean, std, total_samples)
+
+    # Normalise the signal to [0, 1]
+    x_norm = (x - x.min()) / (x.max() - x.min())
+
+    data = {
+        f'sample_{i}': x_norm[i::window_size] for i in range(window_size)
+    }
+    index = np.arange(start_period, end_period)
+
+    df = pd.DataFrame(data, index=index)
+    df.index.name = 'period'
+    csv_path = os.path.join(dst_dir, 'gaussian_noise_samples.csv')
+    df.to_csv(csv_path)
+    print(f'Gaussian noise samples saved to {csv_path}')
 
 
 if __name__ == '__main__':
     # CONFIGURATIONS
+    seed = 0
+    gaussian_noise = True
+    mean = 0
+    std = 0.5
+
     start_period = 30
     end_period = 50
     sampling_ratio = 0.5
     window_size = 15
-    src_dir = '/home/thanostriantafyllou/GS4Time/data/nerf_synthetic/chair/'
-    dst_dir = '/home/thanostriantafyllou/GS4Time/data/time_series/chair/'
+
+
+    src_dir = '/home/anthosmakris/GS_exp/GS4Time/data/nerf_synthetic/chair_src' 
+    dst_dir = '/home/anthosmakris/GS_exp/GS4Time/data/time_series/chair'
+    # src_dir = '/home/thanostriantafyllou/GS4Time/data/nerf_synthetic/chair/'
+    # dst_dir = '/home/thanostriantafyllou/GS4Time/data/time_series/chair/'
 
     # Generate the list of train/test images
     train_imgs = [i for i in range(start_period, end_period, int(1/sampling_ratio))]
     test_imgs = [i for i in range(start_period, end_period)]
 
+    np.random.seed(seed)
 
     copy_images(train_imgs, test_imgs, src_dir, dst_dir)
     create_filtered_json(train_imgs, test_imgs, src_dir, dst_dir)
-    generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, freq=1)
+    if gaussian_noise:
+        generate_gaussian_noise_samples(start_period, end_period, window_size, dst_dir, mean=mean, std=std)
+    else:
+        generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, freq=1)
 
