@@ -196,12 +196,9 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
         torch.cuda.empty_cache()
 
 if __name__ == "__main__":
-    # PARAMETERS:
-    signal_path = "/home/anthosmakris/GS_exp/GS4Time/data/time_series/chair/gaussian_noise_samples.csv"
-
     # Set up command line argument parser
     parser = ArgumentParser(description="Training script parameters")
-    lp = ModelParams(parser, signal_path=signal_path)
+    lp = ModelParams(parser)
     op = OptimizationParams(parser)
     pp = PipelineParams(parser)
     parser.add_argument('--ip', type=str, default="127.0.0.1")

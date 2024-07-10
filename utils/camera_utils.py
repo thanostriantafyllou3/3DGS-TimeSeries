@@ -49,7 +49,6 @@ def loadCam(args, id, cam_info, resolution_scale, signal_windows):
         loaded_mask = resized_image_rgb[3:4, ...]
 
     period_idx = int(cam_info.image_name.split('_')[1].split('.')[0])
-    print(f'Loading signal for period {period_idx}')
     original_signal = torch.Tensor(signal_windows.loc[int(period_idx)].values)
 
     return Camera(colmap_id=cam_info.uid, R=cam_info.R, T=cam_info.T, 
@@ -59,8 +58,7 @@ def loadCam(args, id, cam_info, resolution_scale, signal_windows):
 
 def cameraList_from_camInfos(cam_infos, resolution_scale, args):
     camera_list = []
-    signal_windows = pd.read_csv(args.signal_path, index_col='period')
-    print(signal_windows)
+    signal_windows = pd.read_csv('/home/thanostriantafyllou/GS4Time/data/time_series/chair/sine_wave_samples.csv', index_col='period')
     # each CameraInfo in cam_infos has an 'image_name' attribute (e.g. 'r_0.png')
     for id, c in enumerate(cam_infos):
         camera_list.append(loadCam(args, id, c, resolution_scale, signal_windows))
