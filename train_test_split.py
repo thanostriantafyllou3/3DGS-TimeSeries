@@ -89,7 +89,7 @@ def generate_sine_wave_samples(start_period, end_period, window_size, dst_dir, f
 
     df = pd.DataFrame(data, index=index)
     df.index.name = 'period'
-    csv_path = os.path.join(dst_dir, 'signal.csv')
+    csv_path = os.path.join(dst_dir, 'gt_signal.csv')
     df.to_csv(csv_path)
     print(f'Sine wave samples saved to {csv_path}')
 
@@ -113,7 +113,7 @@ def generate_gaussian_noise_samples(start_period, end_period, window_size, dst_d
 
     df = pd.DataFrame(data, index=index)
     df.index.name = 'period'
-    csv_path = os.path.join(dst_dir, 'signal.csv')
+    csv_path = os.path.join(dst_dir, 'gt_signal.csv')
     df.to_csv(csv_path)
     print(f'Gaussian noise samples saved to {csv_path}')
 
@@ -121,7 +121,7 @@ def generate_gaussian_noise_samples(start_period, end_period, window_size, dst_d
 if __name__ == '__main__':
     ### CONFIGURATIONS
     ## SIGNAL
-    signal_type = 'sine_wave'
+    signal_type = 'gaussian_noise'
     # sine_wave
     freq = 1
     # gaussian_noise
@@ -137,10 +137,10 @@ if __name__ == '__main__':
     window_size = 15
 
     ## FILE PATH
-    # src_dir = '/home/anthosmakris/GS_exp/GS4Time/data/nerf_synthetic/chair_src' 
-    # dst_dir = '/home/anthosmakris/GS_exp/GS4Time/data/time_series/chair'
-    src_dir = '/home/thanostriantafyllou/GS4Time/data/nerf_synthetic/chair/'
-    dst_dir = '/home/thanostriantafyllou/GS4Time/data/time_series/chair/'
+    src_dir = '/home/anthosmakris/GS_exp/GS4Time/data/nerf_synthetic/chair_src' 
+    dst_dir = '/home/anthosmakris/GS_exp/GS4Time/data/time_series/chair_noise_1'
+    # src_dir = '/home/thanostriantafyllou/GS4Time/data/nerf_synthetic/chair/'
+    # dst_dir = '/home/thanostriantafyllou/GS4Time/data/time_series/chair/'
     
     ###############################################################################
 
