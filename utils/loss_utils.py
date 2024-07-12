@@ -24,6 +24,9 @@ def signal_loss(network_output, gt, iter_count=-1):
     if window_size % 2 != 0:
         col_idx_end += 1
 
+    # col_idx_start = 400
+    # col_idx_end = 415
+    
     if iter_count == 1: # if first time computing the loss
         print(f"The coordinates of the horizontal region of interest are: [{row_idx}, {col_idx_start}:{col_idx_end}]")
     
